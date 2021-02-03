@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,6 +22,9 @@ class _FireBaseDemoState extends State<FireBaseDemo> {
 
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  Map data;
+  String name = '6666665656565656565666565';
+  String pass = '010101';
 
   _signIn() async{
     final GoogleSignInAccount googleUser = await googleSignIn.signIn();
@@ -29,23 +33,37 @@ class _FireBaseDemoState extends State<FireBaseDemo> {
     final User user =  (await firebaseAuth.signInWithCredential(credential)).user;
 
   }
+  addData() {
+
+    Map<String,dynamic> demoData = {'Name': name,'Pass' : pass };
+    FirebaseFirestore.instance.collection("data").add(demoData);
+
+    // collectionReference.doc(name).add(demoData);
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: RaisedButton(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RaisedButton(
                 child: Text('Sign In'),
                 onPressed: () {
                   _signIn();
                 },
               ),
-            )
-        ],),
+              RaisedButton(
+                child: Text('Add Data'),
+                onPressed: () {
+                  addData();
+                },
+              ),
+          ],),
+        ),
       ),
     );
   }
